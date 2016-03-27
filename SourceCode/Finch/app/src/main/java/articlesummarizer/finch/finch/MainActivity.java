@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -32,9 +33,12 @@ public class MainActivity extends ListActivity {
     private ArticleListSQLHelper articleListSQLHelper;
 
     RequestQueue queue;
-    // Tag used to log messages
-    private static final String TAG = MainActivity.class.getSimpleName();
-    public final static String EXTRA_MESSAGE = "articlesummarizer.finch.finch.MESSAGE";
+    private static final String TAG = MainActivity.class.getSimpleName();                           // Tag used to log messages
+    public final static String TITLE = "articlesummarizer.finch.finch.TITLE";
+    public final static String URL = "articlesummarizer.finch.finch.URL";
+    public final static String AUTHOR = "articlesummarizer.finch.finch.AUTHOR";
+    public final static String PUBLICATIONDATE = "articlesummarizer.finch.finch.PUBLICATIONDATE";
+    public final static String SUMMARY = "articlesummarizer.finch.finch.SUMMARY";
 
     EditText urlInput;
 
@@ -91,10 +95,14 @@ public class MainActivity extends ListActivity {
         TextView titleTV = (TextView) v.findViewById(R.id.title);
         String title = titleTV.getText().toString();
 
-        //TODO gather info
+        articleListSQLHelper = new ArticleListSQLHelper(MainActivity.this);
+        SQLiteDatabase sqLiteDatabase = articleListSQLHelper.getReadableDatabase();
+        //TODO find the right article
+
 
         Intent intent = new Intent(this, ArticleActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, "ayy you got it");
+        intent.putExtra(TITLE, "ayy you got it");
+        //TODO transfer stuffs
         startActivity(intent);
     }
 
@@ -106,28 +114,11 @@ public class MainActivity extends ListActivity {
                 @Override
                 public void onResponse(String response) {
                     try {
-                        JSONObject obj = new JSONObject(response);
+                        final JSONObject obj = new JSONObject(response);
                         Log.d("extractReq", obj.toString());
-
-                        articleListSQLHelper = new ArticleListSQLHelper(MainActivity.this);
-                        SQLiteDatabase sqLiteDatabase = articleListSQLHelper.getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        values.clear();
-
-                        //write the article input into database table
-                        values.put(ArticleListSQLHelper.COL1_TASK, obj.get("title").toString());
-                        values.put(ArticleListSQLHelper.COL2_TASK, urlStringInput);
-                        values.put(ArticleListSQLHelper.COL3_TASK, obj.get("author").toString());
-                        values.put(ArticleListSQLHelper.COL4_TASK, obj.get("publishDate").toString());
-                        values.put(ArticleListSQLHelper.COL5_TASK, "ayy lmao");
-
-                        sqLiteDatabase.insertWithOnConflict(ArticleListSQLHelper.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
-
-                        //update the article list UI
-                        updateTodoList();
-
+                        summarize(obj, urlStringInput);
                     } catch (Throwable t) {
-                        Log.e("My App", "Could not parse malformed JSON: \"" + response + "\"");
+                        Log.e("Extractor", "Could not parse malformed JSON: \"" + response + "\"");
                     }
                 }
             }, new Response.ErrorListener() {
@@ -145,7 +136,7 @@ public class MainActivity extends ListActivity {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
-                params.put("url", urlStringInput); //"https://medium.com/@zan2434/how-i-learned-to-code-d93260baf219#.6w4wtfch7"
+                params.put("url", urlStringInput);
                 return params;
             }
             @Override
@@ -158,4 +149,86 @@ public class MainActivity extends ListActivity {
         };
         queue.add(extractReq);
     }
+
+    public void summarize(final JSONObject obj, final String urlStringInput) {
+        StringRequest summarizeReq = new StringRequest(Request.Method.POST,"https://api.aylien.com/api/v1/summarize",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject obj2 = new JSONObject(response);
+                            Log.d("summarizeReq", obj2.get("sentences").toString());
+                            String summary = "";
+                            JSONArray jsonArray = (JSONArray) obj2.get("sentences");
+                            if (jsonArray != null) {
+                                for (int i=0; i<jsonArray.length(); i++){
+                                    summary += jsonArray.get(i).toString() + " ";
+                                }
+                            }
+
+                            articleListSQLHelper = new ArticleListSQLHelper(MainActivity.this);
+                            SQLiteDatabase sqLiteDatabase = articleListSQLHelper.getWritableDatabase();
+                            ContentValues values = new ContentValues();
+                            values.clear();
+                            //write the article input into database table
+                            values.put(ArticleListSQLHelper.COL1_TASK, obj.get("title").toString());
+                            values.put(ArticleListSQLHelper.COL2_TASK, urlStringInput);
+                            values.put(ArticleListSQLHelper.COL3_TASK, obj.get("author").toString());
+                            values.put(ArticleListSQLHelper.COL4_TASK, obj.get("publishDate").toString());
+                            values.put(ArticleListSQLHelper.COL5_TASK, summary);
+                            sqLiteDatabase.insertWithOnConflict(ArticleListSQLHelper.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                            //update the article list UI
+                            updateTodoList();
+
+                        } catch (Throwable t) {
+                            Log.e("Summarizer", "Could not parse malformed JSON: \"" + response + "\"");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString(), error);
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Article not found!",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+        ){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("sentences_number","20");
+                params.put("url", urlStringInput); //"https://medium.com/@zan2434/how-i-learned-to-code-d93260baf219#.6w4wtfch7"
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("X-AYLIEN-TextAPI-Application-Key","ac6f5d725a9c90e8373c77c233f2273e");
+                params.put("X-AYLIEN-TextAPI-Application-ID","6432fd32");
+                return params;
+            }
+        };
+        queue.add(summarizeReq);
+    }
 }
+/*
+                        articleListSQLHelper = new ArticleListSQLHelper(MainActivity.this);
+                        SQLiteDatabase sqLiteDatabase = articleListSQLHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.clear();
+
+                        //write the article input into database table
+                        values.put(ArticleListSQLHelper.COL1_TASK, obj.get("title").toString());
+                        values.put(ArticleListSQLHelper.COL2_TASK, urlStringInput);
+                        values.put(ArticleListSQLHelper.COL3_TASK, obj.get("author").toString());
+                        values.put(ArticleListSQLHelper.COL4_TASK, obj.get("publishDate").toString());
+                        values.put(ArticleListSQLHelper.COL5_TASK, "ayy lmao");
+
+                        sqLiteDatabase.insertWithOnConflict(ArticleListSQLHelper.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+
+                        //update the article list UI
+                        updateTodoList();
+ */
