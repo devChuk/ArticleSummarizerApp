@@ -2,6 +2,7 @@ package articlesummarizer.finch.finch;
 
 import android.app.ListActivity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -26,13 +28,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends ListActivity {
-
     private ListAdapter articleListAdapter;
     private ArticleListSQLHelper articleListSQLHelper;
 
     RequestQueue queue;
     // Tag used to log messages
     private static final String TAG = MainActivity.class.getSimpleName();
+    public final static String EXTRA_MESSAGE = "articlesummarizer.finch.finch.MESSAGE";
 
     EditText urlInput;
 
@@ -71,7 +73,7 @@ public class MainActivity extends ListActivity {
     }
 
     public void onDelete(View view) {
-        View v = (View) view.getParent();
+        View v = (View) view.getParent().getParent();
         TextView titleTV = (TextView) v.findViewById(R.id.title);
         String title = titleTV.getText().toString();
 
@@ -84,6 +86,18 @@ public class MainActivity extends ListActivity {
         updateTodoList();
     }
 
+    public void onView(View view) {
+        View v = (View) view.getParent().getParent();
+        TextView titleTV = (TextView) v.findViewById(R.id.title);
+        String title = titleTV.getText().toString();
+
+        //TODO gather info
+
+        Intent intent = new Intent(this, ArticleActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, "ayy you got it");
+        startActivity(intent);
+    }
+
     public void onSummarize(View view) {
         final String urlStringInput = urlInput.getText().toString();
 
@@ -94,7 +108,6 @@ public class MainActivity extends ListActivity {
                     try {
                         JSONObject obj = new JSONObject(response);
                         Log.d("extractReq", obj.toString());
-
 
                         articleListSQLHelper = new ArticleListSQLHelper(MainActivity.this);
                         SQLiteDatabase sqLiteDatabase = articleListSQLHelper.getWritableDatabase();
@@ -121,6 +134,11 @@ public class MainActivity extends ListActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d(TAG, error.toString(), error);
+                    Toast.makeText(
+                        getApplicationContext(),
+                        "Article not found!",
+                            Toast.LENGTH_SHORT)
+                        .show();
                 }
             }
         ){
@@ -139,55 +157,5 @@ public class MainActivity extends ListActivity {
             }
         };
         queue.add(extractReq);
-
-
-
-        /////////////////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////////////////
     }
 }
-/*
-        StringRequest sr = new StringRequest(Request.Method.POST,"https://api.aylien.com/api/v1/summarize",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject obj = new JSONObject(response);
-                            Log.d("My App", obj.toString());
-                            textView.setText(obj.get("sentences").toString());
-                        } catch (Throwable t) {
-                            Log.e("My App", "Could not parse malformed JSON: \"" + response + "\"");
-                        }
-
-//                        Toast.makeText(
-//                                getApplicationContext(),
-//                                response,
-//                                Toast.LENGTH_SHORT)
-//                                .show();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, error.toString(), error);
-            }
-        }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<>();
-                params.put("sentences_number","20");
-                params.put("url",editText.getText().toString()); //"https://medium.com/@zan2434/how-i-learned-to-code-d93260baf219#.6w4wtfch7"
-
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                params.put("X-AYLIEN-TextAPI-Application-Key","ac6f5d725a9c90e8373c77c233f2273e");
-                params.put("X-AYLIEN-TextAPI-Application-ID","6432fd32");
-                return params;
-            }
-        };
-        queue.add(sr);
- */
