@@ -72,7 +72,6 @@ public class MainActivity extends ListActivity {
                 new int[]{R.id.title, R.id.subtitle},
                 0
         );
-
         this.setListAdapter(articleListAdapter);
     }
 
@@ -97,13 +96,33 @@ public class MainActivity extends ListActivity {
 
         articleListSQLHelper = new ArticleListSQLHelper(MainActivity.this);
         SQLiteDatabase sqLiteDatabase = articleListSQLHelper.getReadableDatabase();
-        //TODO find the right article
-
+        //TODO find the right article in SQL and extract it
 
         Intent intent = new Intent(this, ArticleActivity.class);
-        intent.putExtra(TITLE, "ayy you got it");
-        //TODO transfer stuffs
+        Cursor cursor = null;
+        String url, author, publicationdate, summary;
+        url = author = publicationdate = summary = "";
+        try  {
+            cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + ArticleListSQLHelper.TABLE_NAME +
+                                            " WHERE " + ArticleListSQLHelper.COL1_TASK + "=?",
+                                            new String[] {title + ""});
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                url = cursor.getString(cursor.getColumnIndex(ArticleListSQLHelper.COL2_TASK));
+                author = cursor.getString(cursor.getColumnIndex(ArticleListSQLHelper.COL3_TASK));
+                publicationdate = cursor.getString(cursor.getColumnIndex(ArticleListSQLHelper.COL4_TASK));
+                summary = cursor.getString(cursor.getColumnIndex(ArticleListSQLHelper.COL5_TASK));
+            }
+        } finally {
+            intent.putExtra(TITLE, title);
+            intent.putExtra(URL, url);
+            intent.putExtra(AUTHOR, author);
+            intent.putExtra(PUBLICATIONDATE, publicationdate);
+            intent.putExtra(SUMMARY, summary);
+
+        }
         startActivity(intent);
+        cursor.close();
     }
 
     public void onSummarize(View view) {
@@ -214,21 +233,3 @@ public class MainActivity extends ListActivity {
         queue.add(summarizeReq);
     }
 }
-/*
-                        articleListSQLHelper = new ArticleListSQLHelper(MainActivity.this);
-                        SQLiteDatabase sqLiteDatabase = articleListSQLHelper.getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        values.clear();
-
-                        //write the article input into database table
-                        values.put(ArticleListSQLHelper.COL1_TASK, obj.get("title").toString());
-                        values.put(ArticleListSQLHelper.COL2_TASK, urlStringInput);
-                        values.put(ArticleListSQLHelper.COL3_TASK, obj.get("author").toString());
-                        values.put(ArticleListSQLHelper.COL4_TASK, obj.get("publishDate").toString());
-                        values.put(ArticleListSQLHelper.COL5_TASK, "ayy lmao");
-
-                        sqLiteDatabase.insertWithOnConflict(ArticleListSQLHelper.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
-
-                        //update the article list UI
-                        updateTodoList();
- */
