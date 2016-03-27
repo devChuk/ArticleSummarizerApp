@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Summarize"
+        android:id="@+id/button"
+        android:layout_gravity="right"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@android:id/list"
+        android:onClick="onSummarize" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@android:id/list"
+        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/button" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/button"
+        android:layout_alignStart="@android:id/list"
+        android:layout_toStartOf="@+id/button"
+        android:hint="Insert an article url here"
+        android:singleLine="true" />
+</RelativeLayout>
