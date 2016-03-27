@@ -2,10 +2,18 @@ package articlesummarizer.finch.finch;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
-public class ArticleActivity extends Activity{
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class ArticleActivity extends Activity {
 
     Intent intent;
     TextView title, info, date, summary;
@@ -16,14 +24,36 @@ public class ArticleActivity extends Activity{
         setContentView(R.layout.activity_article);
 
         title = (TextView) findViewById(R.id.title);
-        info = (TextView) findViewById(R.id.info); //TODO reformat author & url to account for all cases
-        date = (TextView) findViewById(R.id.date); //TODO reformat date
+        info = (TextView) findViewById(R.id.info);
+        date = (TextView) findViewById(R.id.date);
         summary = (TextView) findViewById(R.id.summary);
 
         intent = getIntent();
         title.setText(intent.getStringExtra(MainActivity.TITLE));
-        info.setText(intent.getStringExtra(MainActivity.AUTHOR) + "|" + intent.getStringExtra(MainActivity.URL));
-        date.setText(intent.getStringExtra(MainActivity.PUBLICATIONDATE));
+
+        String author = intent.getStringExtra(MainActivity.AUTHOR);
+        String url = intent.getStringExtra(MainActivity.URL);
+        info.setText(author + ((!author.equals("") && !url.equals("")) ? " | " : "") + url);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = intent.getStringExtra(MainActivity.PUBLICATIONDATE);
+        dateString = dateString.substring(0, dateString.indexOf("T"));
+        try {
+            Date _date = dateFormat.parse(dateString);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(_date);
+            date.setText(new SimpleDateFormat("MMMM d yyyy").format(cal.getTime()));
+        } catch(ParseException e) {
+            e.printStackTrace();
+        }
+
         summary.setText(intent.getStringExtra(MainActivity.SUMMARY));
+    }
+
+    public void oninfoClick(View view) {
+        Log.d("Redirecting to:", intent.getStringExtra(MainActivity.URL));
+        Intent share = new Intent(Intent.ACTION_VIEW);
+        share.setData(Uri.parse(intent.getStringExtra(MainActivity.URL)));
+        startActivity(share);
     }
 }

@@ -3,4 +3,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="titleNF">Title not found</string>
+    <string name="urlNF">URL not found</string>
+    <string name="summarize">Summarize</string>
+    <string name="placeholder">Insert an article url here</string>
 </resources>

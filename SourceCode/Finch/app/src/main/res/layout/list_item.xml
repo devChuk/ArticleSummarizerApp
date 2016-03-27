@@ -23,9 +23,8 @@
             android:layout_height="fill_parent"
             android:layout_weight="0.7"
             android:id="@+id/title"
-
             android:paddingTop="2dp"
-            android:hint="How I learned to code"
+            android:hint="@string/titleNF"
             android:gravity="top|start" />
 
         <TextView
@@ -34,7 +33,7 @@
             android:layout_weight="1.3"
             android:id="@+id/subtitle"
             android:paddingBottom="0dp"
-            android:hint="medium.com" />
+            android:hint="@string/urlNF" />
 
     </LinearLayout>
 

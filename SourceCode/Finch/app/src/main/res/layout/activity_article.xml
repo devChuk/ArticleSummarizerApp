@@ -43,7 +43,10 @@
             android:text="Small Text"
             android:id="@+id/info"
             android:layout_below="@+id/linearLayout2"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:singleLine="true"
+            android:clickable="true"
+            android:onClick="oninfoClick" />
 
         <TextView
             android:layout_width="wrap_content"

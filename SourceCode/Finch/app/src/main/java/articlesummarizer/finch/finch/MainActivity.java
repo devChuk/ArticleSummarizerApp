@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
@@ -51,8 +52,21 @@ public class MainActivity extends ListActivity {
 
         // Setup Volley networking request
         queue = Volley.newRequestQueue(this); // Need to set up a queue that holds all Volley requests
-
         urlInput = (EditText) findViewById(R.id.editText);
+
+        // Get intent, action and MIME type
+        Intent receivedIntent = getIntent();
+        String action = receivedIntent.getAction();
+        String type = receivedIntent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && "text/plain".equals(type)) {
+            String sharedText = receivedIntent.getStringExtra(Intent.EXTRA_TEXT);
+            if (sharedText != null) {
+                urlInput.setText(sharedText);
+                Button button = (Button) findViewById(R.id.button);
+                button.performClick();
+            }
+        }
     }
 
     //update the article list UI
@@ -127,6 +141,7 @@ public class MainActivity extends ListActivity {
 
     public void onSummarize(View view) {
         final String urlStringInput = urlInput.getText().toString();
+        urlInput.setText("");
 
         StringRequest extractReq = new StringRequest(Request.Method.POST,"https://api.aylien.com/api/v1/extract",
             new Response.Listener<String>() {
@@ -218,8 +233,8 @@ public class MainActivity extends ListActivity {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
-                params.put("sentences_number","20");
-                params.put("url", urlStringInput); //"https://medium.com/@zan2434/how-i-learned-to-code-d93260baf219#.6w4wtfch7"
+                params.put("sentences_number","8");
+                params.put("url", urlStringInput);
                 return params;
             }
             @Override
