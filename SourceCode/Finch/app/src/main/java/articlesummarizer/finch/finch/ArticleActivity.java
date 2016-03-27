@@ -15,7 +15,7 @@ public class ArticleActivity extends Activity{
         setContentView(R.layout.activity_article);
 
         intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        String message = intent.getStringExtra(MainActivity.TITLE);
         TextView title = (TextView) findViewById(R.id.title);
         title.setText(message);
     }
