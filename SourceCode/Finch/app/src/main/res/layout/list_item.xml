@@ -13,9 +13,10 @@
         android:orientation="vertical"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/deleteBtn"
-        android:layout_alignBottom="@+id/deleteBtn"
-        android:clickable="true">
+        android:layout_toStartOf="@+id/buttonlayout"
+        android:layout_alignBottom="@+id/buttonlayout"
+        android:clickable="false"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:layout_width="fill_parent"
@@ -39,14 +40,28 @@
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
-        android:text="Delete"
-        android:id="@+id/deleteBtn"
+        android:id="@+id/buttonlayout"
+        android:weightSum="2"
+        android:orientation="horizontal"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="onDelete" />
+        android:layout_alignParentEnd="true" >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="V"
+            android:layout_weight="1"
+            android:id="@+id/viewBtn"
+            android:onClick="onDelete" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D"
+            android:layout_weight="1"
+            android:id="@+id/deleteBtn"
+            android:onClick="onDelete" />
+    </LinearLayout>
 
 </RelativeLayout>
