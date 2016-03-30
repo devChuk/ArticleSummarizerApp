@@ -1,1 +1,1 @@
-# ArticleSummarizerApp
+# Finch
