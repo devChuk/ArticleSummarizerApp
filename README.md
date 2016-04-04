@@ -12,4 +12,6 @@ Finch is an application that summarizes articles so you can spend less time read
 ```
 
 ## Overview
-![Finch Video](https://github.com/devChuk/ArticleSummarizerApp/raw/master/misc/design_assets/howtouse.gif)
+![Finch Video](https://github.com/devChuk/ArticleSummarizerApp/raw/master/misc/design_assets/demo.gif)
+
+![Finch Video](https://github.com/devChuk/ArticleSummarizerApp/raw/master/misc/design_assets/link.gif)
