@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/relativelayout">
+    android:id="@+id/relativelayout"
+    android:background="#ffffff" >
 
     <ScrollView
         android:id="@+id/SCROLLER_ID"
@@ -16,6 +17,9 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -24,11 +28,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#000000"
                 android:id="@+id/title"
-                android:hint="title" />
+                android:hint="@string/titleError" />
 
             <View android:id="@+id/separator"
-                android:background="#000000"
+                android:background="#979797"
+                android:layout_marginTop="20dp"
                 android:layout_width = "fill_parent"
                 android:layout_height="1dip" />
         </LinearLayout>
@@ -38,6 +44,9 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text=""
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/info"
             android:layout_below="@+id/linearLayout2"
             android:layout_alignParentStart="true"
@@ -51,6 +60,8 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text=""
             android:id="@+id/date"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_below="@+id/info"
             android:layout_alignParentStart="true" />
 
@@ -60,6 +71,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/summaryError"
             android:id="@+id/summary"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textColor="#000000"
             android:layout_below="@+id/date"
             android:layout_alignParentStart="true"
             android:layout_marginTop="24dp" />

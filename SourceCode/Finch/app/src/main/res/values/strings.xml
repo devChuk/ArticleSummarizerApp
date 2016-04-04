@@ -8,4 +8,5 @@
     <string name="summarize">Summarize</string>
     <string name="placeholder">Insert an article url here</string>
     <string name="summaryError">Error: summary not found</string>
+    <string name="titleError">Title Not Found</string>
 </resources>

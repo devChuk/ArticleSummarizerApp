@@ -1,7 +1,11 @@
 package articlesummarizer.finch.finch;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +31,16 @@ public class ArticleActivity extends Activity {
         info = (TextView) findViewById(R.id.info);
         date = (TextView) findViewById(R.id.date);
         summary = (TextView) findViewById(R.id.summary);
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ChaparralPro-Regular.otf");
+
+        title.setTypeface(tf);
+        info.setTypeface(tf);
+        date.setTypeface(tf);
+        summary.setTypeface(tf);
+
+        ActionBar bar = getActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
 
         intent = getIntent();
         title.setText(intent.getStringExtra(MainActivity.TITLE));

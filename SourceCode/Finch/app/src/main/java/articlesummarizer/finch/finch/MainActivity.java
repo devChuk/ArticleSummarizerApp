@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +46,7 @@ public class MainActivity extends ListActivity {
     public final static String SUMMARY = "articlesummarizer.finch.finch.SUMMARY";
 
     EditText urlInput;
+    Typeface tf;
 
 
     @Override
@@ -61,6 +63,9 @@ public class MainActivity extends ListActivity {
         queue = Volley.newRequestQueue(this); // Need to set up a queue that holds all Volley requests
         urlInput = (EditText) findViewById(R.id.editText);
         urlInput.setHintTextColor(getResources().getColor(R.color.white));
+
+        tf = Typeface.createFromAsset(getAssets(), "fonts/circularbook.ttf");
+        urlInput.setTypeface(tf);
 
         // Get intent, action and MIME type
         Intent receivedIntent = getIntent();
