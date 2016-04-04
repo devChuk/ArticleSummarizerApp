@@ -26,3 +26,5 @@ Tapping the link in an article will redirect you to the original page.
 
 - Uses the Aylien text analysis to generate summaries
 - Users can share articles to the app through the browesr or any other application
+
+![](https://raw.githubusercontent.com/devChuk/ArticleSummarizerApp/master/misc/design_assets/list.png) ![](https://raw.githubusercontent.com/devChuk/ArticleSummarizerApp/master/misc/design_assets/view.png)
