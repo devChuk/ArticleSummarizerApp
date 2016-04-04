@@ -1,27 +1,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="@color/white">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/summarize"
+        style="?android:attr/borderlessButtonStyle"
         android:id="@+id/button"
         android:layout_gravity="end"
         android:layout_alignParentTop="true"
-        android:layout_alignEnd="@android:id/list"
-        android:onClick="onSummarize" />
+        android:onClick="onSummarize"
+        android:background="@color/blue"
+        android:layout_alignParentEnd="true"
+        android:textStyle="italic"
+        android:clickable="true"
+        android:textColor="@color/white"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@android:id/list"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/button" />
+        android:layout_below="@+id/button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -29,8 +36,13 @@
         android:id="@+id/editText"
         android:layout_alignParentTop="true"
         android:layout_alignBottom="@+id/button"
-        android:layout_alignStart="@android:id/list"
-        android:layout_toStartOf="@+id/button"
         android:hint="@string/placeholder"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:background="@color/blue"
+        android:textColor="@color/white"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/button"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp" />
+
 </RelativeLayout>

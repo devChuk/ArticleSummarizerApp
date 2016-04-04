@@ -1,10 +1,13 @@
 package articlesummarizer.finch.finch;
 
+import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -50,9 +53,14 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
         updateTodoList();
 
+        ActionBar bar = getActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
+        bar.setElevation(0);
+
         // Setup Volley networking request
         queue = Volley.newRequestQueue(this); // Need to set up a queue that holds all Volley requests
         urlInput = (EditText) findViewById(R.id.editText);
+        urlInput.setHintTextColor(getResources().getColor(R.color.white));
 
         // Get intent, action and MIME type
         Intent receivedIntent = getIntent();

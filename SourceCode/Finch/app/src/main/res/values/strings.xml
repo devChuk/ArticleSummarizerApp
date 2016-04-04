@@ -7,4 +7,5 @@
     <string name="urlNF">URL not found</string>
     <string name="summarize">Summarize</string>
     <string name="placeholder">Insert an article url here</string>
+    <string name="summaryError">Error: summary not found</string>
 </resources>
