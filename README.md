@@ -4,6 +4,8 @@
 
 Finch is an application that summarizes articles so you can spend less time reading and more time on the things that matter more. It also saves your summaries so you don't even need an Internet connection.
 
+This is a submission for Capital One's Software Engineering Summit's final round. You can see the challenge [here](https://campus.capitalone.com/campus-events) and learn more about it [here](https://youtu.be/c5efHTl40dE).
+
 ## Installation
 ```
  - Runs on minimum SDK Version: 21 (Android 5.0, Lollipop)
