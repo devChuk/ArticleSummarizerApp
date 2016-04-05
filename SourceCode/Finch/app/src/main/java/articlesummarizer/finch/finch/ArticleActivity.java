@@ -51,12 +51,14 @@ public class ArticleActivity extends Activity {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = intent.getStringExtra(MainActivity.PUBLICATIONDATE);
-        dateString = dateString.substring(0, dateString.indexOf("T"));
         try {
-            Date _date = dateFormat.parse(dateString);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(_date);
-            date.setText(new SimpleDateFormat("MMMM d yyyy").format(cal.getTime()));
+            if (dateString.contains("T")) {
+                dateString = dateString.substring(0, dateString.indexOf("T"));
+                Date _date = dateFormat.parse(dateString);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(_date);
+                date.setText(new SimpleDateFormat("MMMM d yyyy").format(cal.getTime()));
+            }
         } catch(ParseException e) {
             e.printStackTrace();
         }
